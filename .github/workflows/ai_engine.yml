@@ -1,0 +1,35 @@
+name: IQ AI Master Engine Runner
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'  # يعمل آلياً كل 10 دقائق
+  workflow_dispatch:        # يتيح زر التشغيل الفوري واليدوي
+
+jobs:
+  run_quad_ai_inference:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: جلب الكود والموديلات (Checkout Repository)
+        uses: actions/checkout@v4
+
+      - name: إعداد بيئة بايثون (Python 3.10)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: تثبيت حزم الذكاء الاصطناعي (PyTorch & Scikit-learn)
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install numpy pandas scikit-learn joblib requests lightgbm
+
+      - name: تنفيذ دورة الذكاء الاصطناعي وإرسال المصفوفة
+        env:
+          GAS_API_URL: ${{ secrets.GAS_API_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python cloud_ai_engine.py
