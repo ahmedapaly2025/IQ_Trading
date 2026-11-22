@@ -3,191 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IQ AI Analyzer — Luxury Obsidian Cockpit 2026</title>
+  <title>IQ AI Cockpit — Enterprise 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07090e;
-      --panel: #0e131f;
-      --card: #131a2b;
-      --border: #1e293b;
-      --border-glow: #3b82f644;
-      --accent: #38bdf8;
-      --call: #00e676;
-      --call-glow: rgba(0, 230, 118, 0.25);
-      --put: #ff5252;
-      --put-glow: rgba(255, 82, 82, 0.25);
-      --wait: #64748b;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
+      --bg: #07090e; --panel: #0e131f; --card: #131a2b; --border: #1e293b;
+      --accent: #38bdf8; --call: #00e676; --put: #ff5252; --text: #f8fafc; --text-muted: #94a3b8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Cairo', sans-serif;
-      padding: 20px;
-      line-height: 1.5;
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'Cairo', sans-serif; padding: 20px; }
     .container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
     
-    /* Header */
     header {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+      padding: 16px 24px; display: flex; justify-content: space-between; align-items: center;
     }
-    .brand { display: flex; align-items: center; gap: 12px; }
-    .brand-icon {
-      width: 40px; height: 40px; background: linear-gradient(135deg, #2563eb, #38bdf8);
-      border-radius: 10px; display: flex; align-items: center; justify-content: center;
-      font-weight: 900; font-size: 1.2rem;
+    .tabs-nav { display: flex; gap: 10px; margin-bottom: 10px; }
+    .tab-btn {
+      background: var(--panel); border: 1px solid var(--border); color: var(--text-muted);
+      padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer;
     }
-    .pulse-online {
-      display: inline-block; width: 10px; height: 10px; border-radius: 50%;
-      background: var(--call); box-shadow: 0 0 10px var(--call); margin-left: 8px;
-    }
+    .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+    
+    .cockpit-grid { display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
+    @media (max-width: 1024px) { .cockpit-grid { grid-template-columns: 1fr; } }
 
-    /* Grid Layout */
-    .cockpit-grid {
-      display: grid;
-      grid-template-columns: 340px 1fr;
-      gap: 20px;
+    .panel-box {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+      padding: 20px; display: flex; flex-direction: column; gap: 16px;
     }
-    @media (max-width: 1024px) {
-      .cockpit-grid { grid-template-columns: 1fr; }
-    }
-
-    /* Control Deck (قمرة التحكم) */
-    .control-deck {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    .section-title {
-      font-size: 0.95rem; font-weight: 700; color: var(--accent);
-      border-bottom: 1px solid var(--border); padding-bottom: 8px;
-    }
+    .section-title { font-size: 0.95rem; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
     .control-group { display: flex; flex-direction: column; gap: 6px; }
-    .control-group label { font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between; }
-    input[type="range"] { accent-color: var(--accent); cursor: pointer; }
-    select, button {
+    .control-group label { font-size: 0.85rem; color: var(--text-muted); }
+    select, input, button {
       background: var(--card); border: 1px solid var(--border); color: var(--text);
-      padding: 10px 14px; border-radius: 8px; font-family: inherit; font-size: 0.9rem;
+      padding: 10px; border-radius: 8px; font-family: inherit; font-size: 0.9rem;
     }
-    .btn-apply {
-      background: linear-gradient(135deg, #1d4ed8, #2563eb);
-      color: #fff; font-weight: 700; cursor: pointer; border: none;
-      transition: all 0.2s; margin-top: 10px;
-    }
-    .btn-apply:hover { opacity: 0.9; transform: translateY(-1px); }
-
-    /* Telemetry Stats Cards */
-    .telemetry-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 12px;
-    }
-    .stat-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      text-align: center;
-    }
-    .stat-card span { font-size: 0.8rem; color: var(--text-muted); }
-    .stat-card strong { display: block; font-size: 1.5rem; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
-
-    /* Prediction Matrix Table */
-    .matrix-panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+    .btn-apply { background: #2563eb; color: #fff; font-weight: 700; cursor: pointer; border: none; margin-top: 10px; }
+    
     table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    th, td { padding: 10px; text-align: right; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
     th { color: var(--text-muted); background: rgba(0,0,0,0.2); }
-    td code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
-
-    .badge {
-      display: inline-block; padding: 4px 10px; border-radius: 6px;
-      font-weight: 700; font-size: 0.8rem; text-align: center;
-    }
-    .badge-call { background: var(--call-glow); color: var(--call); border: 1px solid var(--call); }
-    .badge-put { background: var(--put-glow); color: var(--put); border: 1px solid var(--put); }
-    .badge-wait { background: rgba(255,255,255,0.05); color: var(--wait); }
-
-    /* Terminal Console */
-    .terminal-box {
-      background: #04060a; border: 1px solid var(--border); border-radius: 10px;
-      padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
-      color: #38bdf8; max-height: 140px; overflow-y: auto;
-    }
+    
+    .badge { padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
+    .badge-call { background: rgba(0,230,118,0.2); color: var(--call); border: 1px solid var(--call); }
+    .badge-put { background: rgba(255,82,82,0.2); color: var(--put); border: 1px solid var(--put); }
+    
+    .checkbox-row { display: flex; gap: 15px; margin: 5px 0; }
+    .checkbox-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text); }
   </style>
 </head>
 <body>
 
 <div class="container">
   <header>
-    <div class="brand">
-      <div class="brand-icon">IQ</div>
-      <div>
-        <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v5.0</span></h2>
-        <small style="color: var(--text-muted);">
-          <span class="pulse-online"></span> متصل بـ Google Sheets & GitHub Actions
-        </small>
-      </div>
+    <div>
+      <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v5.2</span></h2>
+      <small style="color: var(--text-muted);">🟢 متصل بـ IQ Option والسيرفر السحابي</small>
     </div>
     <button onclick="refreshDashboard()" style="cursor: pointer;">🔄 تحديث فوري</button>
   </header>
 
-  <!-- عدادات الأداء التراكمي -->
-  <div class="telemetry-row">
-    <div class="stat-card">
-      <span>الصفقات المحسومة</span>
-      <strong id="decidedTrades">7,685</strong>
-    </div>
-    <div class="stat-card">
-      <span>الإصابات (Hits)</span>
-      <strong id="hitTrades" style="color: var(--call);">3,878</strong>
-    </div>
-    <div class="stat-card">
-      <span>الإخفاقات (Misses)</span>
-      <strong id="missTrades" style="color: var(--put);">3,807</strong>
-    </div>
-    <div class="stat-card">
-      <span>نسبة الفوز الحقيقية</span>
-      <strong id="winRate" style="color: var(--accent);">50.5%</strong>
-    </div>
-    <div class="stat-card">
-      <span>الصفقات المعلقة</span>
-      <strong id="pendingTrades">3,340</strong>
-    </div>
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab('main')">📊 مصفوفة التحليل وقمرة القيادة</button>
+    <button class="tab-btn" onclick="switchTab('telegram')">✈️ إعدادات بوت Telegram المتقدمة</button>
   </div>
 
-  <div class="cockpit-grid">
-    <!-- لوحة التحكم الحية في إعدادات البوت -->
-    <div class="control-deck">
-      <div class="section-title">⚙️ قمرة التحكم التفاعلية</div>
+  <!-- التبويب 1: التحليل الرئيسي وقمرة التحكم -->
+  <div id="tab-main" class="cockpit-grid">
+    <div class="panel-box">
+      <div class="section-title">⚙️ قمرة التحكم في التداول</div>
 
       <div class="control-group">
-        <label>حالة المحرك السحابي: <b id="lblEngineStatus">تشغيل</b></label>
-        <select id="ctrlIsActive">
-          <option value="true">نشط وفعال (RUNNING)</option>
-          <option value="false">إيقاف مؤقت (PAUSED)</option>
+        <label>زوج التداول (الـ 20 زوجاً مع الـ OTC):</label>
+        <select id="ctrlPair">
+          <optgroup label="أزواج الفوركس العادية">
+            <option value="EURUSD">EURUSD</option>
+            <option value="GBPUSD">GBPUSD</option>
+            <option value="USDJPY">USDJPY</option>
+            <option value="AUDUSD">AUDUSD</option>
+            <option value="USDCAD">USDCAD</option>
+            <option value="USDCHF">USDCHF</option>
+            <option value="NZDUSD">NZDUSD</option>
+            <option value="EURGBP">EURGBP</option>
+            <option value="EURJPY">EURJPY</option>
+            <option value="GBPJPY">GBPJPY</option>
+          </optgroup>
+          <optgroup label="أزواج الـ OTC (تعمل 24/7 طوال العطلة)">
+            <option value="EURUSD-OTC" selected>🟢 EURUSD-OTC</option>
+            <option value="GBPUSD-OTC">🟢 GBPUSD-OTC</option>
+            <option value="USDJPY-OTC">🟢 USDJPY-OTC</option>
+            <option value="AUDUSD-OTC">🟢 AUDUSD-OTC</option>
+            <option value="USDCAD-OTC">🟢 USDCAD-OTC</option>
+            <option value="USDCHF-OTC">🟢 USDCHF-OTC</option>
+            <option value="NZDUSD-OTC">🟢 NZDUSD-OTC</option>
+            <option value="EURGBP-OTC">🟢 EURGBP-OTC</option>
+            <option value="EURJPY-OTC">🟢 EURJPY-OTC</option>
+            <option value="GBPJPY-OTC">🟢 GBPJPY-OTC</option>
+          </optgroup>
         </select>
       </div>
 
@@ -199,68 +112,90 @@
       <div class="control-group">
         <label>نظام الإجماع والتوافق:</label>
         <select id="ctrlConsensus">
-          <option value="4/4">إجماع صارم كامل (4/4)</option>
+          <option value="4/4">إجماع كامل صارم (4/4)</option>
           <option value="3/4">إجماع أغلبي مرن (3/4)</option>
         </select>
       </div>
 
-      <div class="control-group">
-        <label>زوج التداول النشط:</label>
-        <select id="ctrlPair">
-          <option value="EURUSD">EURUSD</option>
-          <option value="EURUSD-OTC">EURUSD-OTC</option>
-          <option value="GBPUSD">GBPUSD</option>
-          <option value="USDJPY">USDJPY</option>
-        </select>
-      </div>
+      <button class="btn-apply" onclick="saveAllSettings()">💾 حفظ وتطبيق الإعدادات</button>
 
-      <div class="control-group">
-        <label>تنبيهات Telegram المباشرة:</label>
-        <select id="ctrlTelegram">
-          <option value="true">مفعلة (Enabled)</option>
-          <option value="false">معطلة (Muted)</option>
-        </select>
-      </div>
-
-      <button class="btn-apply" onclick="saveControlSettings()">💾 تطبيق وتثبيت في السحابة</button>
+      <div class="section-title" style="margin-top: 15px;">🔍 نتائج التقييم المستمر وإعادة التدريب</div>
+      <table style="font-size: 0.75rem;">
+        <thead><tr><th>الوقت</th><th>الزوج</th><th>القرار</th><th>النتيجة</th></tr></thead>
+        <tbody id="evalsTbody">
+          <tr><td colspan="4" style="text-align: center;">جاري فحص نتائج الشموع...</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- مصفوفة التوقعات الـ 12 وأصوات النماذج الـ 4 -->
-    <div class="matrix-panel">
-      <div class="section-title">📊 مصفوفة الآفاق المتعددة (Multi-Horizon 12-Prediction Matrix)</div>
-      <div style="overflow-x: auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>الفريم</th>
-              <th>الشمعة</th>
-              <th>القرار</th>
-              <th>الثقة</th>
-              <th>ML</th>
-              <th>LSTM</th>
-              <th>TCN</th>
-              <th>TRF</th>
-              <th>DI Status</th>
-            </tr>
-          </thead>
-          <tbody id="matrixTbody">
-            <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">جاري مزامنة أحدث مصفوفة...</td></tr>
-          </tbody>
-        </table>
-      </div>
+    <!-- مصفوفة التوقعات -->
+    <div class="panel-box">
+      <div class="section-title">📊 مصفوفة الآفاق المتعددة (Multi-Horizon Matrix)</div>
+      <table style="font-family: 'JetBrains Mono', monospace;">
+        <thead>
+          <tr><th>الفريم</th><th>الشمعة</th><th>القرار</th><th>الثقة</th><th>ML</th><th>LSTM</th><th>TCN</th><th>TRF</th></tr>
+        </thead>
+        <tbody id="matrixTbody">
+          <tr><td colspan="8" style="text-align: center;">جاري المزامنة مع السحابة...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-      <div class="section-title">📜 سجل أحداث النظام (System Diagnostics Log)</div>
-      <div class="terminal-box" id="termLogs">
-        [SYS] Initializing Luxury Obsidian Web Deck...<br>
-        [NET] Connecting to Google Apps Script Gateway...
+  <!-- التبويب 2: إعدادات Telegram المتقدمة (مطابقة للكود الأصلي) -->
+  <div id="tab-telegram" class="panel-box" style="display: none;">
+    <div class="section-title">✈️ إعدادات بوت التليجرام وشروط الفلترة المتقدمة</div>
+
+    <div class="control-group">
+      <label>حالة الإرسال التلقائي:</label>
+      <select id="tgEnabled">
+        <option value="true">تفعيل الإرسال الفوري 🟢</option>
+        <option value="false">كتم الإشعارات مؤقتاً 🔴</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>🕯 اختيار أنواع الشموع المستهدفة للإرسال:</label>
+      <div class="checkbox-row">
+        <label><input type="checkbox" id="tgC1" checked> الشمعة 1 (الفورية C1)</label>
+        <label><input type="checkbox" id="tgC2" checked> الشمعة 2 (التالية C2)</label>
+        <label><input type="checkbox" id="tgC3"> الشمعة 3 (المستقبلية C3)</label>
       </div>
     </div>
+
+    <div class="control-group">
+      <label>شرط اتجاه التوقع المسموح بإرساله:</label>
+      <select id="tgDirection">
+        <option value="صعود وهبوط">صعود وهبوط (CALL & PUT)</option>
+        <option value="صعود فقط">صعود فقط (CALL Only)</option>
+        <option value="هبوط فقط">هبوط فقط (PUT Only)</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>الحد الأدنى لمتوسط نسبة الثقة للإرسال (%):</label>
+      <input type="number" id="tgMinAvg" min="50" max="95" value="65">
+    </div>
+
+    <div class="control-group">
+      <label>فترة التهدئة ومنع التكرار (Cooldown بالدقائق):</label>
+      <input type="number" id="tgCooldown" min="1" max="60" value="5">
+      <small style="color: var(--text-muted);">تمنع تكرار إرسال إشارات متتالية لنفس الزوج قبل انقضاء هذه المدة.</small>
+    </div>
+
+    <button class="btn-apply" onclick="saveAllSettings()" style="width: 250px;">💾 حفظ إعدادات Telegram</button>
   </div>
 </div>
 
 <script>
-  // ضع هنا رابط الـ Web App الخاص بك من الخطوة 2
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbygeG6IiyxKEqTTCmeJcnojA0aFxxBm_ULD3STCQqxwygg7bmB7PfuRQoa5QefGG9EZXw/exec";
+  const GAS_URL = "ضع_هنا_رابط_GOOGLE_APPS_SCRIPT_EXEC";
+
+  function switchTab(t) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('tab-main').style.display = (t === 'main') ? 'grid' : 'none';
+    document.getElementById('tab-telegram').style.display = (t === 'telegram') ? 'flex' : 'none';
+  }
 
   async function refreshDashboard() {
     if (GAS_URL.includes("ضع_هنا_رابط")) return;
@@ -269,87 +204,75 @@
       const json = await res.json();
       if (json.status !== "success") return;
 
-      // 1. تحديث الإحصائيات
-      if (json.stats) {
-        document.getElementById("decidedTrades").innerText = json.stats.decided || "--";
-        document.getElementById("hitTrades").innerText = json.stats.hits || "--";
-        document.getElementById("missTrades").innerText = json.stats.misses || "--";
-        document.getElementById("winRate").innerText = json.stats.win_rate || "--";
-        document.getElementById("pendingTrades").innerText = json.stats.pending || "--";
-      }
-
-      // 2. تحديث قمرة التحكم
+      // تحديث عناصر التحكم
       if (json.control) {
-        document.getElementById("ctrlIsActive").value = String(json.control.is_active).toLowerCase();
+        document.getElementById("ctrlPair").value = json.control.pair || "EURUSD-OTC";
         document.getElementById("ctrlConfidence").value = json.control.min_confidence || 70;
         document.getElementById("lblConf").innerText = (json.control.min_confidence || 70) + "%";
         document.getElementById("ctrlConsensus").value = json.control.consensus_mode || "4/4";
-        document.getElementById("ctrlPair").value = json.control.pair || "EURUSD";
-        document.getElementById("ctrlTelegram").value = String(json.control.telegram_alerts).toLowerCase();
+        
+        // إعدادات التليجرام
+        document.getElementById("tgEnabled").value = String(json.control.tg_enabled);
+        document.getElementById("tgC1").checked = (json.control.tg_c1 === true || json.control.tg_c1 === "true");
+        document.getElementById("tgC2").checked = (json.control.tg_c2 === true || json.control.tg_c2 === "true");
+        document.getElementById("tgC3").checked = (json.control.tg_c3 === true || json.control.tg_c3 === "true");
+        document.getElementById("tgDirection").value = json.control.tg_direction || "صعود وهبوط";
+        document.getElementById("tgMinAvg").value = json.control.tg_min_avg || 65;
+        document.getElementById("tgCooldown").value = json.control.tg_cooldown || 5;
       }
 
-      // 3. تحديث مصفوفة التوقعات
-      if (json.matrix && json.matrix.length > 0) {
-        const tbody = document.getElementById("matrixTbody");
-        tbody.innerHTML = "";
-        json.matrix.forEach(row => {
-          const tr = document.createElement("tr");
-          let badgeClass = "badge-wait";
-          if (row.Action === "CALL") badgeClass = "badge-call";
-          if (row.Action === "PUT") badgeClass = "badge-put";
-
-          tr.innerHTML = `
-            <td><b>${row.Horizon}</b></td>
-            <td>${row.Candle}</td>
-            <td><span class="badge ${badgeClass}">${row.Action}</span></td>
-            <td><b>${row.Confidence}</b></td>
-            <td><code>${row.ML_Vote}</code></td>
-            <td><code>${row.LSTM_Vote}</code></td>
-            <td><code>${row.TCN_Vote}</code></td>
-            <td><code>${row.TRF_Vote}</code></td>
-            <td><small style="color: var(--call);">${row.DI_Status}</small></td>
-          `;
-          tbody.appendChild(tr);
-        });
+      // تحديث المصفوفة
+      if (json.matrix) {
+        const tb = document.getElementById("matrixTbody");
+        tb.innerHTML = json.matrix.map(r => `
+          <tr>
+            <td><b>${r.Horizon}</b></td><td>${r.Candle}</td>
+            <td><span class="badge ${r.Action === 'CALL' ? 'badge-call' : (r.Action === 'PUT' ? 'badge-put' : '')}">${r.Action}</span></td>
+            <td><b>${r.Confidence}</b></td><td>${r.ML_Vote}</td><td>${r.LSTM_Vote}</td><td>${r.TCN_Vote}</td><td>${r.TRF_Vote}</td>
+          </tr>
+        `).join("");
       }
 
-      // 4. تحديث السجل
-      if (json.logs && json.logs.length > 0) {
-        const box = document.getElementById("termLogs");
-        box.innerHTML = json.logs.map(l => `[${l[0]}] [${l[1]}] [${l[2]}]: ${l[3]}`).join("<br>");
+      // تحديث سجل التقييم
+      if (json.evals && json.evals.length > 0) {
+        const evTb = document.getElementById("evalsTbody");
+        evTb.innerHTML = json.evals.map(ev => `
+          <tr>
+            <td>${ev[0]}</td><td>${ev[1]}</td><td>${ev[2]}</td>
+            <td style="font-weight: bold; color: ${ev[5].includes('WIN') ? 'var(--call)' : 'var(--put)'}">${ev[5]}</td>
+          </tr>
+        `).join("");
       }
 
-    } catch (err) {
-      console.error("Fetch failed", err);
-    }
+    } catch (e) { console.error(e); }
   }
 
-  async function saveControlSettings() {
+  async function saveAllSettings() {
     const payload = {
       action: "update_control",
       settings: {
-        is_active: document.getElementById("ctrlIsActive").value === "true",
+        pair: document.getElementById("ctrlPair").value,
         min_confidence: parseInt(document.getElementById("ctrlConfidence").value),
         consensus_mode: document.getElementById("ctrlConsensus").value,
-        pair: document.getElementById("ctrlPair").value,
-        telegram_alerts: document.getElementById("ctrlTelegram").value === "true"
+        tg_enabled: document.getElementById("tgEnabled").value === "true",
+        tg_c1: document.getElementById("tgC1").checked,
+        tg_c2: document.getElementById("tgC2").checked,
+        tg_c3: document.getElementById("tgC3").checked,
+        tg_direction: document.getElementById("tgDirection").value,
+        tg_min_avg: parseInt(document.getElementById("tgMinAvg").value),
+        tg_cooldown: parseInt(document.getElementById("tgCooldown").value)
       }
     };
 
     try {
-      const res = await fetch(GAS_URL, {
-        method: "POST",
-        body: JSON.stringify(payload)
-      });
-      alert("✅ تم إرسال الإعدادات بنجاح وحفظها في Google Sheets!");
+      await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
+      alert("✅ تم حفظ وتطبيق الإعدادات في السحابة بنجاح!");
       refreshDashboard();
-    } catch (e) {
-      alert("❌ تعذر حفظ الإعدادات: " + e);
-    }
+    } catch (err) { alert("خطأ في الحفظ: " + err); }
   }
 
   refreshDashboard();
-  setInterval(refreshDashboard, 10000); // تحديث كل 10 ثوانٍ
+  setInterval(refreshDashboard, 10000);
 </script>
 
 </body>
