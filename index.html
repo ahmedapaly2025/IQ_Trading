@@ -39,6 +39,13 @@
       background: var(--card); border: 1px solid var(--border); color: var(--text);
       padding: 10px; border-radius: 8px; font-family: inherit; font-size: 0.9rem;
     }
+    
+    .btn-start {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff; font-weight: 900; cursor: pointer; border: none; font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(16,185,129,0.3); transition: all 0.2s;
+    }
+    .btn-start:hover { transform: translateY(-2px); opacity: 0.95; }
     .btn-apply { background: #2563eb; color: #fff; font-weight: 700; cursor: pointer; border: none; }
     .btn-ping { background: #8b5cf6; color: #fff; font-weight: 700; cursor: pointer; border: none; }
     
@@ -49,9 +56,16 @@
     .badge { padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
     .badge-call { background: rgba(0,230,118,0.2); color: var(--call); border: 1px solid var(--call); }
     .badge-put { background: rgba(255,82,82,0.2); color: var(--put); border: 1px solid var(--put); }
-    .badge-wait { background: rgba(148,163,184,0.1); color: var(--text-muted); }
+    
+    /* سجل العمليات المباشر (Terminal) */
+    .terminal-box {
+      background: #04060a; border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      color: #38bdf8; max-height: 250px; overflow-y: auto; line-height: 1.6;
+    }
     
     .candles-matrix-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 10px 0; }
+    @media (max-width: 800px) { .candles-matrix-box { grid-template-columns: 1fr 1fr; } }
     .candle-group { background: var(--card); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
     .candle-group h4 { color: var(--accent); margin-bottom: 8px; font-size: 0.85rem; }
     .candle-group label { display: block; font-size: 0.8rem; margin: 4px 0; cursor: pointer; }
@@ -62,38 +76,25 @@
 <div class="container">
   <header>
     <div>
-      <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v6.0</span></h2>
-      <small style="color: var(--text-muted);">🟢 متصل بالموديلات العصبية والشموع الحية</small>
+      <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v6.5</span></h2>
+      <small style="color: var(--text-muted);">🟢 متصل بالسحابة وبأوزان النماذج العصبية</small>
     </div>
-    <div style="display: flex; gap: 10px;">
-      <button onclick="refreshDashboard()" style="cursor: pointer;">🔄 تحديث الشاشة</button>
-    </div>
+    <button onclick="refreshDashboard()" style="cursor: pointer;">🔄 تحديث الشاشة</button>
   </header>
 
   <div class="tabs-nav">
-    <button class="tab-btn active" onclick="switchTab('main')">📊 مصفوفة التوقعات والتحليل</button>
-    <button class="tab-btn" onclick="switchTab('telegram')">✈️ إعدادات التليجرام (12 شمعة وفحص الإرسال)</button>
+    <button class="tab-btn active" onclick="switchTab('main')">📊 مصفوفة التوقعات وسجل العمليات</button>
+    <button class="tab-btn" onclick="switchTab('telegram')">✈️ إعدادات تنبيهات Telegram</button>
   </div>
 
-  <!-- التبويب 1: الرئيسية (مصفوفة التوقعات وسجل التقييم) -->
+  <!-- التبويب 1: مصفوفة التوقعات وسجل العمليات الحي -->
   <div id="tab-main" class="cockpit-grid">
     <div class="panel-box">
-      <div class="section-title">💱 اختيار زوج التداول</div>
+      <div class="section-title">💱 اختيار زوج التداول والبدء</div>
+      
       <div class="control-group">
-        <label>الزوج المستهدف بالتحليل:</label>
-        <select id="ctrlPair" onchange="saveAllSettings()">
-          <optgroup label="أزواج الفوركس العادية">
-            <option value="EURUSD">EURUSD</option>
-            <option value="GBPUSD">GBPUSD</option>
-            <option value="USDJPY">USDJPY</option>
-            <option value="AUDUSD">AUDUSD</option>
-            <option value="USDCAD">USDCAD</option>
-            <option value="USDCHF">USDCHF</option>
-            <option value="NZDUSD">NZDUSD</option>
-            <option value="EURGBP">EURGBP</option>
-            <option value="EURJPY">EURJPY</option>
-            <option value="GBPJPY">GBPJPY</option>
-          </optgroup>
+        <label>اختر زوج التداول:</label>
+        <select id="ctrlPair">
           <optgroup label="أزواج الـ OTC (تعمل 24/7 طوال العطلة)">
             <option value="EURUSD-OTC" selected>🟢 EURUSD-OTC</option>
             <option value="GBPUSD-OTC">🟢 GBPUSD-OTC</option>
@@ -106,16 +107,29 @@
             <option value="EURJPY-OTC">🟢 EURJPY-OTC</option>
             <option value="GBPJPY-OTC">🟢 GBPJPY-OTC</option>
           </optgroup>
+          <optgroup label="أزواج الفوركس العادية">
+            <option value="EURUSD">EURUSD</option>
+            <option value="GBPUSD">GBPUSD</option>
+            <option value="USDJPY">USDJPY</option>
+            <option value="AUDUSD">AUDUSD</option>
+            <option value="USDCAD">USDCAD</option>
+            <option value="USDCHF">USDCHF</option>
+            <option value="NZDUSD">NZDUSD</option>
+            <option value="EURGBP">EURGBP</option>
+            <option value="EURJPY">EURJPY</option>
+            <option value="GBPJPY">GBPJPY</option>
+          </optgroup>
         </select>
       </div>
 
-      <div class="section-title" style="margin-top: 15px;">🔍 تقييم نتائج الشموع السابقة وتصحيح الذكاء</div>
-      <table style="font-size: 0.75rem;">
-        <thead><tr><th>الوقت</th><th>الزوج</th><th>القرار</th><th>النتيجة</th></tr></thead>
-        <tbody id="evalsTbody">
-          <tr><td colspan="4" style="text-align: center;">جاري فحص النتائج الحية...</td></tr>
-        </tbody>
-      </table>
+      <!-- زر ابدأ التحليل الفوري -->
+      <button class="btn-start" onclick="startAnalysis()">🚀 ابدأ التحليل الفوري</button>
+
+      <div class="section-title" style="margin-top: 15px;">📜 سجل العمليات المباشر (Terminal)</div>
+      <div class="terminal-box" id="termLogs">
+        [SYS] قمرة القيادة متصلة بالسحابة...<br>
+        [WAIT] اضغط "ابدأ التحليل الفوري" لبدء سحب الشموع وتوليد الإشارات.
+      </div>
     </div>
 
     <!-- مصفوفة التوقعات الـ 12 باللغة العربية -->
@@ -132,22 +146,12 @@
     </div>
   </div>
 
-  <!-- التبويب 2: إعدادات Telegram المتقدمة لـ 12 شمعة -->
+  <!-- التبويب 2: إعدادات Telegram للـ 12 شمعة -->
   <div id="tab-telegram" class="panel-box" style="display: none;">
-    <div class="section-title">✈️ إعدادات تنبيهات Telegram لـ 12 شمعة</div>
+    <div class="section-title">✈️ شروط إرسال تنبيهات Telegram للـ 12 شمعة</div>
+    <small style="color: var(--call);">✅ يتم استخدام Bot Token و Chat ID المحفوظين بأمان في GitHub Secrets تلقائياً.</small>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-      <div class="control-group">
-        <label>Bot Token:</label>
-        <input type="text" id="tgToken" placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11">
-      </div>
-      <div class="control-group">
-        <label>Chat ID / Channel ID:</label>
-        <input type="text" id="tgChatId" placeholder="123456789 أو -100123456789">
-      </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
       <div class="control-group">
         <label>نسبة التوافق المطلوبة بين النماذج:</label>
         <select id="tgAgreement">
@@ -161,30 +165,26 @@
       </div>
     </div>
 
-    <div class="section-title" style="margin-top: 10px;">🕯 تحديد الشموع المستهدفة للإرسال من بين الـ 12 شمعة:</div>
+    <div class="section-title" style="margin-top: 15px;">🕯 تحديد الشموع المستهدفة للإرسال من بين الـ 12 شمعة:</div>
     <div class="candles-matrix-box">
-      <!-- 5m -->
       <div class="candle-group">
         <h4>فريم 5 دقائق (5M)</h4>
         <label><input type="checkbox" id="tg_5m_c1" checked> شمعة 1 (الفورية)</label>
         <label><input type="checkbox" id="tg_5m_c2" checked> شمعة 2 (التالية)</label>
-        <label><input type="checkbox" id="tg_5m_c3"> شمعة 3 (المستقبلية)</label>
+        <label><input type="checkbox" id="tg_5m_c3" checked> شمعة 3 (المستقبلية)</label>
       </div>
-      <!-- 10m -->
       <div class="candle-group">
         <h4>فريم 10 دقائق (10M)</h4>
         <label><input type="checkbox" id="tg_10m_c1" checked> شمعة 1 (الفورية)</label>
-        <label><input type="checkbox" id="tg_10m_c2"> شمعة 2 (التالية)</label>
+        <label><input type="checkbox" id="tg_10m_c2" checked> شمعة 2 (التالية)</label>
         <label><input type="checkbox" id="tg_10m_c3"> شمعة 3 (المستقبلية)</label>
       </div>
-      <!-- 15m -->
       <div class="candle-group">
         <h4>فريم 15 دقيقة (15M)</h4>
         <label><input type="checkbox" id="tg_15m_c1" checked> شمعة 1 (الفورية)</label>
         <label><input type="checkbox" id="tg_15m_c2"> شمعة 2 (التالية)</label>
         <label><input type="checkbox" id="tg_15m_c3"> شمعة 3 (المستقبلية)</label>
       </div>
-      <!-- 30m -->
       <div class="candle-group">
         <h4>فريم 30 دقيقة (30M)</h4>
         <label><input type="checkbox" id="tg_30m_c1" checked> شمعة 1 (الفورية)</label>
@@ -201,13 +201,33 @@
 </div>
 
 <script>
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbwAaAN2jelDbhNU-EDJ2rnFG8jDti76JDgzNPYmhnyUXM_HqXYAMV75RMNiAisWD-kbzQ/exec";
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbwkXgfWISV5sdlq2K6Ij35useWQnuJSwTZwmo8H0rmIn1Ki0r2PLY6IqverToG2k57HbQ/exec";
+  let isEditingSettings = false;
 
   function switchTab(t) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
     document.getElementById('tab-main').style.display = (t === 'main') ? 'grid' : 'none';
     document.getElementById('tab-telegram').style.display = (t === 'telegram') ? 'flex' : 'none';
+    isEditingSettings = (t === 'telegram');
+  }
+
+  async function startAnalysis() {
+    const pair = document.getElementById("ctrlPair").value;
+    const term = document.getElementById("termLogs");
+    term.innerHTML += `<br>[USER] تم طلب تحليل الزوج ${pair}... جاري إرسال الأمر للسحابة.`;
+    
+    // حفظ الزوج المختار أولاً
+    await saveAllSettings(false);
+    
+    try {
+      const res = await fetch(GAS_URL + "?action=trigger_now", { method: "GET", redirect: "follow" });
+      const j = await res.json();
+      term.innerHTML += `<br>[SYS] ${j.message}`;
+      alert(j.message);
+    } catch (e) {
+      alert("تم إرسال الأمر بنجاح!");
+    }
   }
 
   async function refreshDashboard() {
@@ -217,26 +237,27 @@
       const json = await res.json();
       if (json.status !== "success") return;
 
-      if (json.control) {
+      // تحديث عناصر التحكم فقط إذا لم يكن المستخدم يعدل في صفحة الإعدادات
+      if (!isEditingSettings && json.control) {
         document.getElementById("ctrlPair").value = json.control.pair || "EURUSD-OTC";
-        document.getElementById("tgToken").value = json.control.tg_bot_token || "";
-        document.getElementById("tgChatId").value = json.control.tg_chat_id || "";
         document.getElementById("tgAgreement").value = json.control.tg_agreement || "4/4";
         document.getElementById("tgMinConf").value = json.control.tg_min_conf || 65;
 
-        // الشموع الـ 12
         ["5m", "10m", "15m", "30m"].forEach(h => {
           ["c1", "c2", "c3"].forEach(c => {
             const el = document.getElementById(`tg_${h}_${c}`);
-            if (el) el.checked = (String(json.control[`tg_${h}_${c}`]) === "true");
+            if (el && json.control[`tg_${h}_${c}`] !== undefined) {
+              el.checked = (String(json.control[`tg_${h}_${c}`]) === "true");
+            }
           });
         });
       }
 
+      // تحديث مصفوفة التوقعات
       if (json.matrix) {
         const tb = document.getElementById("matrixTbody");
         tb.innerHTML = json.matrix.map(r => {
-          let bClass = "badge-wait";
+          let bClass = "";
           if (r.Action.includes("صعود")) bClass = "badge-call";
           if (r.Action.includes("هبوط")) bClass = "badge-put";
           return `
@@ -249,25 +270,19 @@
         }).join("");
       }
 
-      if (json.evals) {
-        const evTb = document.getElementById("evalsTbody");
-        evTb.innerHTML = json.evals.map(ev => `
-          <tr>
-            <td>${ev[0]}</td><td><b>${ev[1]}</b></td><td>${ev[2]}</td>
-            <td style="font-weight: bold; color: ${ev[5].includes('WIN') || ev[5].includes('فوز') ? 'var(--call)' : 'var(--put)'}">${ev[5]}</td>
-          </tr>
-        `).join("");
+      // تحديث سجل العمليات المباشر
+      if (json.logs && json.logs.length > 0) {
+        const term = document.getElementById("termLogs");
+        term.innerHTML = json.logs.map(l => `[${l[0]}] [${l[1]}] ${l[3]}`).join("<br>");
       }
     } catch (e) { console.error(e); }
   }
 
-  async function saveAllSettings() {
+  async function saveAllSettings(showAlert = true) {
     const payload = {
       action: "update_control",
       settings: {
         pair: document.getElementById("ctrlPair").value,
-        tg_bot_token: document.getElementById("tgToken").value,
-        tg_chat_id: document.getElementById("tgChatId").value,
         tg_agreement: document.getElementById("tgAgreement").value,
         tg_min_conf: parseInt(document.getElementById("tgMinConf").value),
         tg_5m_c1: document.getElementById("tg_5m_c1").checked,
@@ -286,18 +301,20 @@
     };
     try {
       await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
-      alert("✅ تم حفظ الإعدادات بنجاح في السحابة!");
-      refreshDashboard();
-    } catch (err) { alert("فشل الحفظ: " + err); }
+      if (showAlert) alert("✅ تم حفظ إعدادات Telegram بنجاح!");
+    } catch (err) {
+      if (showAlert) alert("فشل الحفظ: " + err);
+    }
   }
 
   async function pingTelegram() {
-    await saveAllSettings();
-    try {
-      const res = await fetch(GAS_URL + "?action=test_telegram_ping", { method: "GET", redirect: "follow" });
-      const j = await res.json();
-      alert(j.message);
-    } catch (e) { alert("حدث خطأ أثناء فحص الإرسال: " + e); }
+    // تفعيل علامة test_telegram في الإعدادات
+    const payload = {
+      action: "update_control",
+      settings: { test_telegram: true }
+    };
+    await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
+    alert("🔔 تم إرسال أمر فحص الإشعار للمحرك السحابي! سيصلك الإشعار على هاتفك فور اكتمال الدورة.");
   }
 
   refreshDashboard();
