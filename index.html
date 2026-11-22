@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة إشارات الذكاء الاصطناعي | Live Signals Dashboard</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #151c2e;
+      --border: #232d42;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --call: #10b981;
+      --put: #ef4444;
+      --primary: #3b82f6;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container { max-width: 1000px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 { margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
+    .live-dot {
+      width: 10px; height: 10px; background: var(--call); border-radius: 50%;
+      box-shadow: 0 0 10px var(--call); animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 15px;
+    }
+    .card h3 { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
+    .card p { margin: 10px 0 0; font-size: 1.6rem; font-weight: bold; }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td { padding: 12px 15px; text-align: right; border-bottom: 1px solid var(--border); }
+    th { background: #1c263c; color: var(--text-muted); font-size: 0.85rem; }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+    .badge-call { background: rgba(16, 185, 129, 0.2); color: var(--call); }
+    .badge-put { background: rgba(239, 68, 68, 0.2); color: var(--put); }
+    .btn-refresh {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1><span class="live-dot"></span> غرفة عمليات الذكاء الاصطناعي (IQ AI Hub)</h1>
+    <button class="btn-refresh" onclick="fetchSignals()">تحديث يدوي 🔄</button>
+  </header>
+
+  <div class="stats-grid">
+    <div class="card">
+      <h3>إجمالي الإشارات المسجلة</h3>
+      <p id="totalSignals">0</p>
+    </div>
+    <div class="card">
+      <h3>متوسط دقة التوقع</h3>
+      <p id="avgConfidence">--%</p>
+    </div>
+    <div class="card">
+      <h3>حالة الربط مع Google Sheets</h3>
+      <p id="status" style="font-size: 1.1rem; color: var(--call);">متصل بنجاح</p>
+    </div>
+  </div>
+
+  <h2>آخر الصفقات الصادرة من المحرك</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>الوقت</th>
+        <th>الزوج</th>
+        <th>النوع</th>
+        <th>نسبة الثقة</th>
+        <th>السعر</th>
+        <th>الحالة</th>
+      </tr>
+    </thead>
+    <tbody id="signalsTableBody">
+      <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">جاري تحميل الإشارات من السحابة...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  // ضع هنا رابط Web App الخاص بـ Google Apps Script الذي نسخته في الخطوة 2
+  const GAS_URL = "ضع_هنا_رابط_GOOGLE_APPS_SCRIPT_EXEC";
+
+  async function fetchSignals() {
+    if (GAS_URL.includes("ضع_هنا_رابط")) {
+      alert("يرجى إدخال رابط Google Apps Script في ملف index.html");
+      return;
+    }
+    
+    document.getElementById("status").innerText = "جاري التحديث...";
+    try {
+      // نستخدم redirect: 'follow' لأن جوجل تقوم بعمل تحويل 302
+      const res = await fetch(GAS_URL, { method: "GET", redirect: "follow" });
+      const json = await res.json();
+
+      if (json.status === "success") {
+        document.getElementById("status").innerText = "متصل بنجاح ✅";
+        renderData(json.data);
+      } else {
+        document.getElementById("status").innerText = "خطأ في الجلب ⚠️";
+      }
+    } catch (err) {
+      console.error(err);
+      document.getElementById("status").innerText = "فشل الاتصال بالخادم ❌";
+    }
+  }
+
+  function renderData(data) {
+    const tbody = document.getElementById("signalsTableBody");
+    tbody.innerHTML = "";
+    document.getElementById("totalSignals").innerText = data.length;
+
+    let confSum = 0;
+    data.forEach(item => {
+      const tr = document.createElement("tr");
+      const isCall = (item.Action || "").toUpperCase() === "CALL";
+      const badgeClass = isCall ? "badge-call" : "badge-put";
+      
+      confSum += parseFloat(item.Confidence) || 0;
+
+      tr.innerHTML = `
+        <td>${item.Timestamp || "--"}</td>
+        <td><b>${item.Pair || "--"}</b></td>
+        <td><span class="badge ${badgeClass}">${item.Action || "--"}</span></td>
+        <td>${item.Confidence || "--"}</td>
+        <td>${item.Price || "--"}</td>
+        <td>${item.Status || "PENDING"}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    if (data.length > 0) {
+      document.getElementById("avgConfidence").innerText = (confSum / data.length).toFixed(1) + "%";
+    }
+  }
+
+  // تحديث تلقائي كل 30 ثانية
+  fetchSignals();
+  setInterval(fetchSignals, 30000);
+</script>
+
+</body>
+</html>
