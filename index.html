@@ -3,81 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة إشارات الذكاء الاصطناعي | Live Signals Dashboard</title>
+  <title>IQ AI Analyzer — Luxury Obsidian Cockpit 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0b0f19;
-      --card-bg: #151c2e;
-      --border: #232d42;
-      --text: #f3f4f6;
-      --text-muted: #9ca3af;
-      --call: #10b981;
-      --put: #ef4444;
-      --primary: #3b82f6;
+      --bg: #07090e;
+      --panel: #0e131f;
+      --card: #131a2b;
+      --border: #1e293b;
+      --border-glow: #3b82f644;
+      --accent: #38bdf8;
+      --call: #00e676;
+      --call-glow: rgba(0, 230, 118, 0.25);
+      --put: #ff5252;
+      --put-glow: rgba(255, 82, 82, 0.25);
+      --wait: #64748b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
     }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      padding: 20px;
       background: var(--bg);
       color: var(--text);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Cairo', sans-serif;
+      padding: 20px;
+      line-height: 1.5;
     }
-    .container { max-width: 1000px; margin: 0 auto; }
+    .container { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+    
+    /* Header */
     header {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
-    h1 { margin: 0; font-size: 1.5rem; display: flex; align-items: center; gap: 10px; }
-    .live-dot {
-      width: 10px; height: 10px; background: var(--call); border-radius: 50%;
-      box-shadow: 0 0 10px var(--call); animation: pulse 1.5s infinite;
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon {
+      width: 40px; height: 40px; background: linear-gradient(135deg, #2563eb, #38bdf8);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 1.2rem;
     }
-    @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-    .stats-grid {
+    .pulse-online {
+      display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+      background: var(--call); box-shadow: 0 0 10px var(--call); margin-left: 8px;
+    }
+
+    /* Grid Layout */
+    .cockpit-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 1024px) {
+      .cockpit-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Control Deck (قمرة التحكم) */
+    .control-deck {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .section-title {
+      font-size: 0.95rem; font-weight: 700; color: var(--accent);
+      border-bottom: 1px solid var(--border); padding-bottom: 8px;
+    }
+    .control-group { display: flex; flex-direction: column; gap: 6px; }
+    .control-group label { font-size: 0.85rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+    input[type="range"] { accent-color: var(--accent); cursor: pointer; }
+    select, button {
+      background: var(--card); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 14px; border-radius: 8px; font-family: inherit; font-size: 0.9rem;
+    }
+    .btn-apply {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color: #fff; font-weight: 700; cursor: pointer; border: none;
+      transition: all 0.2s; margin-top: 10px;
+    }
+    .btn-apply:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    /* Telemetry Stats Cards */
+    .telemetry-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-card span { font-size: 0.8rem; color: var(--text-muted); }
+    .stat-card strong { display: block; font-size: 1.5rem; font-family: 'JetBrains Mono', monospace; margin-top: 4px; }
+
+    /* Prediction Matrix Table */
+    .matrix-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
       gap: 15px;
-      margin: 20px 0;
     }
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 15px;
-    }
-    .card h3 { margin: 0; font-size: 0.85rem; color: var(--text-muted); }
-    .card p { margin: 10px 0 0; font-size: 1.6rem; font-weight: bold; }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--card-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-    th, td { padding: 12px 15px; text-align: right; border-bottom: 1px solid var(--border); }
-    th { background: #1c263c; color: var(--text-muted); font-size: 0.85rem; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    th { color: var(--text-muted); background: rgba(0,0,0,0.2); }
+    td code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; }
+
     .badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 0.85rem;
+      display: inline-block; padding: 4px 10px; border-radius: 6px;
+      font-weight: 700; font-size: 0.8rem; text-align: center;
     }
-    .badge-call { background: rgba(16, 185, 129, 0.2); color: var(--call); }
-    .badge-put { background: rgba(239, 68, 68, 0.2); color: var(--put); }
-    .btn-refresh {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
+    .badge-call { background: var(--call-glow); color: var(--call); border: 1px solid var(--call); }
+    .badge-put { background: var(--put-glow); color: var(--put); border: 1px solid var(--put); }
+    .badge-wait { background: rgba(255,255,255,0.05); color: var(--wait); }
+
+    /* Terminal Console */
+    .terminal-box {
+      background: #04060a; border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      color: #38bdf8; max-height: 140px; overflow-y: auto;
     }
   </style>
 </head>
@@ -85,103 +142,214 @@
 
 <div class="container">
   <header>
-    <h1><span class="live-dot"></span> غرفة عمليات الذكاء الاصطناعي (IQ AI Hub)</h1>
-    <button class="btn-refresh" onclick="fetchSignals()">تحديث يدوي 🔄</button>
+    <div class="brand">
+      <div class="brand-icon">IQ</div>
+      <div>
+        <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v5.0</span></h2>
+        <small style="color: var(--text-muted);">
+          <span class="pulse-online"></span> متصل بـ Google Sheets & GitHub Actions
+        </small>
+      </div>
+    </div>
+    <button onclick="refreshDashboard()" style="cursor: pointer;">🔄 تحديث فوري</button>
   </header>
 
-  <div class="stats-grid">
-    <div class="card">
-      <h3>إجمالي الإشارات المسجلة</h3>
-      <p id="totalSignals">0</p>
+  <!-- عدادات الأداء التراكمي -->
+  <div class="telemetry-row">
+    <div class="stat-card">
+      <span>الصفقات المحسومة</span>
+      <strong id="decidedTrades">7,685</strong>
     </div>
-    <div class="card">
-      <h3>متوسط دقة التوقع</h3>
-      <p id="avgConfidence">--%</p>
+    <div class="stat-card">
+      <span>الإصابات (Hits)</span>
+      <strong id="hitTrades" style="color: var(--call);">3,878</strong>
     </div>
-    <div class="card">
-      <h3>حالة الربط مع Google Sheets</h3>
-      <p id="status" style="font-size: 1.1rem; color: var(--call);">متصل بنجاح</p>
+    <div class="stat-card">
+      <span>الإخفاقات (Misses)</span>
+      <strong id="missTrades" style="color: var(--put);">3,807</strong>
+    </div>
+    <div class="stat-card">
+      <span>نسبة الفوز الحقيقية</span>
+      <strong id="winRate" style="color: var(--accent);">50.5%</strong>
+    </div>
+    <div class="stat-card">
+      <span>الصفقات المعلقة</span>
+      <strong id="pendingTrades">3,340</strong>
     </div>
   </div>
 
-  <h2>آخر الصفقات الصادرة من المحرك</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>الوقت</th>
-        <th>الزوج</th>
-        <th>النوع</th>
-        <th>نسبة الثقة</th>
-        <th>السعر</th>
-        <th>الحالة</th>
-      </tr>
-    </thead>
-    <tbody id="signalsTableBody">
-      <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">جاري تحميل الإشارات من السحابة...</td></tr>
-    </tbody>
-  </table>
+  <div class="cockpit-grid">
+    <!-- لوحة التحكم الحية في إعدادات البوت -->
+    <div class="control-deck">
+      <div class="section-title">⚙️ قمرة التحكم التفاعلية</div>
+
+      <div class="control-group">
+        <label>حالة المحرك السحابي: <b id="lblEngineStatus">تشغيل</b></label>
+        <select id="ctrlIsActive">
+          <option value="true">نشط وفعال (RUNNING)</option>
+          <option value="false">إيقاف مؤقت (PAUSED)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>حد الثقة الأدنى: <b id="lblConf">70%</b></label>
+        <input type="range" id="ctrlConfidence" min="50" max="90" value="70" oninput="lblConf.innerText=this.value+'%'">
+      </div>
+
+      <div class="control-group">
+        <label>نظام الإجماع والتوافق:</label>
+        <select id="ctrlConsensus">
+          <option value="4/4">إجماع صارم كامل (4/4)</option>
+          <option value="3/4">إجماع أغلبي مرن (3/4)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>زوج التداول النشط:</label>
+        <select id="ctrlPair">
+          <option value="EURUSD">EURUSD</option>
+          <option value="EURUSD-OTC">EURUSD-OTC</option>
+          <option value="GBPUSD">GBPUSD</option>
+          <option value="USDJPY">USDJPY</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>تنبيهات Telegram المباشرة:</label>
+        <select id="ctrlTelegram">
+          <option value="true">مفعلة (Enabled)</option>
+          <option value="false">معطلة (Muted)</option>
+        </select>
+      </div>
+
+      <button class="btn-apply" onclick="saveControlSettings()">💾 تطبيق وتثبيت في السحابة</button>
+    </div>
+
+    <!-- مصفوفة التوقعات الـ 12 وأصوات النماذج الـ 4 -->
+    <div class="matrix-panel">
+      <div class="section-title">📊 مصفوفة الآفاق المتعددة (Multi-Horizon 12-Prediction Matrix)</div>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>الفريم</th>
+              <th>الشمعة</th>
+              <th>القرار</th>
+              <th>الثقة</th>
+              <th>ML</th>
+              <th>LSTM</th>
+              <th>TCN</th>
+              <th>TRF</th>
+              <th>DI Status</th>
+            </tr>
+          </thead>
+          <tbody id="matrixTbody">
+            <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">جاري مزامنة أحدث مصفوفة...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-title">📜 سجل أحداث النظام (System Diagnostics Log)</div>
+      <div class="terminal-box" id="termLogs">
+        [SYS] Initializing Luxury Obsidian Web Deck...<br>
+        [NET] Connecting to Google Apps Script Gateway...
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-  // ضع هنا رابط Web App الخاص بـ Google Apps Script الذي نسخته في الخطوة 2
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbzAjI_DRrHh4SaFfqh2G_8njaFeM7ypw-r2MWYkVcCkqbwerG28n6ZZcwxIRzKX4O84JA/exec";
+  // ضع هنا رابط الـ Web App الخاص بك من الخطوة 2
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbygeG6IiyxKEqTTCmeJcnojA0aFxxBm_ULD3STCQqxwygg7bmB7PfuRQoa5QefGG9EZXw/exec";
 
-  async function fetchSignals() {
-    if (GAS_URL.includes("ضع_هنا_رابط")) {
-      alert("يرجى إدخال رابط Google Apps Script في ملف index.html");
-      return;
-    }
-    
-    document.getElementById("status").innerText = "جاري التحديث...";
+  async function refreshDashboard() {
+    if (GAS_URL.includes("ضع_هنا_رابط")) return;
     try {
-      // نستخدم redirect: 'follow' لأن جوجل تقوم بعمل تحويل 302
       const res = await fetch(GAS_URL, { method: "GET", redirect: "follow" });
       const json = await res.json();
+      if (json.status !== "success") return;
 
-      if (json.status === "success") {
-        document.getElementById("status").innerText = "متصل بنجاح ✅";
-        renderData(json.data);
-      } else {
-        document.getElementById("status").innerText = "خطأ في الجلب ⚠️";
+      // 1. تحديث الإحصائيات
+      if (json.stats) {
+        document.getElementById("decidedTrades").innerText = json.stats.decided || "--";
+        document.getElementById("hitTrades").innerText = json.stats.hits || "--";
+        document.getElementById("missTrades").innerText = json.stats.misses || "--";
+        document.getElementById("winRate").innerText = json.stats.win_rate || "--";
+        document.getElementById("pendingTrades").innerText = json.stats.pending || "--";
       }
+
+      // 2. تحديث قمرة التحكم
+      if (json.control) {
+        document.getElementById("ctrlIsActive").value = String(json.control.is_active).toLowerCase();
+        document.getElementById("ctrlConfidence").value = json.control.min_confidence || 70;
+        document.getElementById("lblConf").innerText = (json.control.min_confidence || 70) + "%";
+        document.getElementById("ctrlConsensus").value = json.control.consensus_mode || "4/4";
+        document.getElementById("ctrlPair").value = json.control.pair || "EURUSD";
+        document.getElementById("ctrlTelegram").value = String(json.control.telegram_alerts).toLowerCase();
+      }
+
+      // 3. تحديث مصفوفة التوقعات
+      if (json.matrix && json.matrix.length > 0) {
+        const tbody = document.getElementById("matrixTbody");
+        tbody.innerHTML = "";
+        json.matrix.forEach(row => {
+          const tr = document.createElement("tr");
+          let badgeClass = "badge-wait";
+          if (row.Action === "CALL") badgeClass = "badge-call";
+          if (row.Action === "PUT") badgeClass = "badge-put";
+
+          tr.innerHTML = `
+            <td><b>${row.Horizon}</b></td>
+            <td>${row.Candle}</td>
+            <td><span class="badge ${badgeClass}">${row.Action}</span></td>
+            <td><b>${row.Confidence}</b></td>
+            <td><code>${row.ML_Vote}</code></td>
+            <td><code>${row.LSTM_Vote}</code></td>
+            <td><code>${row.TCN_Vote}</code></td>
+            <td><code>${row.TRF_Vote}</code></td>
+            <td><small style="color: var(--call);">${row.DI_Status}</small></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // 4. تحديث السجل
+      if (json.logs && json.logs.length > 0) {
+        const box = document.getElementById("termLogs");
+        box.innerHTML = json.logs.map(l => `[${l[0]}] [${l[1]}] [${l[2]}]: ${l[3]}`).join("<br>");
+      }
+
     } catch (err) {
-      console.error(err);
-      document.getElementById("status").innerText = "فشل الاتصال بالخادم ❌";
+      console.error("Fetch failed", err);
     }
   }
 
-  function renderData(data) {
-    const tbody = document.getElementById("signalsTableBody");
-    tbody.innerHTML = "";
-    document.getElementById("totalSignals").innerText = data.length;
+  async function saveControlSettings() {
+    const payload = {
+      action: "update_control",
+      settings: {
+        is_active: document.getElementById("ctrlIsActive").value === "true",
+        min_confidence: parseInt(document.getElementById("ctrlConfidence").value),
+        consensus_mode: document.getElementById("ctrlConsensus").value,
+        pair: document.getElementById("ctrlPair").value,
+        telegram_alerts: document.getElementById("ctrlTelegram").value === "true"
+      }
+    };
 
-    let confSum = 0;
-    data.forEach(item => {
-      const tr = document.createElement("tr");
-      const isCall = (item.Action || "").toUpperCase() === "CALL";
-      const badgeClass = isCall ? "badge-call" : "badge-put";
-      
-      confSum += parseFloat(item.Confidence) || 0;
-
-      tr.innerHTML = `
-        <td>${item.Timestamp || "--"}</td>
-        <td><b>${item.Pair || "--"}</b></td>
-        <td><span class="badge ${badgeClass}">${item.Action || "--"}</span></td>
-        <td>${item.Confidence || "--"}</td>
-        <td>${item.Price || "--"}</td>
-        <td>${item.Status || "PENDING"}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    if (data.length > 0) {
-      document.getElementById("avgConfidence").innerText = (confSum / data.length).toFixed(1) + "%";
+    try {
+      const res = await fetch(GAS_URL, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      alert("✅ تم إرسال الإعدادات بنجاح وحفظها في Google Sheets!");
+      refreshDashboard();
+    } catch (e) {
+      alert("❌ تعذر حفظ الإعدادات: " + e);
     }
   }
 
-  // تحديث تلقائي كل 30 ثانية
-  fetchSignals();
-  setInterval(fetchSignals, 30000);
+  refreshDashboard();
+  setInterval(refreshDashboard, 10000); // تحديث كل 10 ثوانٍ
 </script>
 
 </body>
