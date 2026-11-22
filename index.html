@@ -54,11 +54,11 @@
     .badge-call { background: rgba(0,230,118,0.2); color: var(--call); border: 1px solid var(--call); }
     .badge-put { background: rgba(255,82,82,0.2); color: var(--put); border: 1px solid var(--put); }
     
-    /* سجل العمليات المباشر بعرض الصفحة كاملة */
+    /* سجل العمليات المباشر في الأسفل وبعرض الصفحة كاملة */
     .terminal-box-full {
       background: #030508; border: 1px solid var(--border); border-radius: 10px;
       padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
-      color: #38bdf8; max-height: 300px; overflow-y: auto; line-height: 1.8;
+      color: #38bdf8; max-height: 320px; overflow-y: auto; line-height: 1.8;
       box-shadow: inset 0 0 20px rgba(0,0,0,0.8); width: 100%;
     }
     
@@ -74,21 +74,20 @@
 <div class="container">
   <header>
     <div>
-      <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v6.8</span></h2>
-      <small style="color: var(--text-muted);">🟢 متصل بـ IQ Option وبنماذج models/ العصبية</small>
+      <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v7.0</span></h2>
+      <small style="color: var(--text-muted);">🟢 متصل بالنماذج العصبية الحقيقية وبالشموع الحية</small>
     </div>
     <button onclick="refreshDashboard()" style="cursor: pointer;">🔄 تحديث فوري</button>
   </header>
 
   <div class="tabs-nav">
-    <button class="tab-btn active" onclick="switchTab('main')">📊 مصفوفة التوقعات الحية</button>
-    <button class="tab-btn" onclick="switchTab('telegram')">✈️ إعدادات تنبيهات Telegram (12 شمعة)</button>
+    <button class="tab-btn active" onclick="switchTab('main')">📊 مصفوفة التوقعات وسجل العمليات</button>
+    <button class="tab-btn" onclick="switchTab('telegram')">✈️ إعدادات تنبيهات Telegram</button>
   </div>
 
-  <!-- التبويب 1: مصفوفة التوقعات والتحكم -->
+  <!-- التبويب 1: مصفوفة التوقعات وسجل العمليات -->
   <div id="tab-main" style="display: flex; flex-direction: column; gap: 20px;">
     
-    <!-- شريط التحكم العلوي السريع -->
     <div class="top-controls">
       <label style="font-weight: bold; color: var(--accent);">زوج التداول المستهدف:</label>
       <select id="ctrlPair" style="flex: 1;">
@@ -122,7 +121,7 @@
 
     <!-- مصفوفة التوقعات الـ 12 باللغة العربية -->
     <div class="panel-box">
-      <div class="section-title">📊 مصفوفة الآفاق المتعددة (12 تنبؤاً بالذكاء الاصطناعي من models/)</div>
+      <div class="section-title">📊 مصفوفة الآفاق المتعددة (12 تنبؤاً بالذكاء الاصطناعي الحقيقي من models/)</div>
       <table>
         <thead>
           <tr><th>الفريم</th><th>الشمعة</th><th>القرار التوافقي</th><th>نسبة الثقة</th><th>ML</th><th>LSTM</th><th>TCN</th><th>TRF</th><th>مؤشر الشذوذ DI</th></tr>
@@ -138,15 +137,15 @@
       <div class="section-title">📜 سجل العمليات والأحداث المباشر (Terminal Log)</div>
       <div class="terminal-box-full" id="termLogs">
         [SYS] قمرة القيادة متصلة بخادم الذكاء الاصطناعي...<br>
-        [WAIT] اضغط "ابدأ التحليل الفوري" لسحب 300 شمعة حية وتشغيل النماذج فوراً.
+        [WAIT] اضغط "ابدأ التحليل الفوري" لسحب الشموع وتشغيل النماذج فوراً.
       </div>
     </div>
   </div>
 
-  <!-- التبويب 2: إعدادات Telegram للـ 12 شمعة -->
+  <!-- التبويب 2: إعدادات Telegram -->
   <div id="tab-telegram" class="panel-box" style="display: none;">
     <div class="section-title">✈️ شروط إرسال تنبيهات Telegram للـ 12 شمعة</div>
-    <small style="color: var(--call);">✅ يتم استخدام Bot Token و Chat ID المحفوظين في GitHub Secrets تلقائياً دون الحاجة لكتابتهم هنا.</small>
+    <small style="color: var(--call);">✅ يتم استخدام Bot Token و Chat ID المحفوظين في GitHub Secrets تلقائياً.</small>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
       <div>
@@ -168,12 +167,12 @@
         <h4>فريم 5 دقائق (5M)</h4>
         <label><input type="checkbox" id="tg_5m_c1" checked> شمعة 1 (الفورية)</label>
         <label><input type="checkbox" id="tg_5m_c2" checked> شمعة 2 (التالية)</label>
-        <label><input type="checkbox" id="tg_5m_c3" checked> شمعة 3 (المستقبلية)</label>
+        <label><input type="checkbox" id="tg_5m_c3"> شمعة 3 (المستقبلية)</label>
       </div>
       <div class="candle-group">
         <h4>فريم 10 دقائق (10M)</h4>
         <label><input type="checkbox" id="tg_10m_c1" checked> شمعة 1 (الفورية)</label>
-        <label><input type="checkbox" id="tg_10m_c2" checked> شمعة 2 (التالية)</label>
+        <label><input type="checkbox" id="tg_10m_c2"> شمعة 2 (التالية)</label>
         <label><input type="checkbox" id="tg_10m_c3"> شمعة 3 (المستقبلية)</label>
       </div>
       <div class="candle-group">
@@ -195,7 +194,7 @@
 </div>
 
 <script>
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbwkXgfWISV5sdlq2K6Ij35useWQnuJSwTZwmo8H0rmIn1Ki0r2PLY6IqverToG2k57HbQ/exec";
+  const GAS_URL = "ضع_هنا_رابط_GOOGLE_APPS_SCRIPT_EXEC";
   let activeTab = "main";
 
   function switchTab(t) {
@@ -209,10 +208,10 @@
   async function startAnalysis() {
     const pair = document.getElementById("ctrlPair").value;
     const term = document.getElementById("termLogs");
-    term.innerHTML += `<br>[USER] تم طلب تحليل الزوج <b>${pair}</b>... جاري إرسال الأمر للسحابة.`;
+    term.innerHTML += `<br>[USER] تم طلب تحليل الزوج <b>${pair}</b>... جاري إرسال الأمر للمحرك السحابي.`;
     term.scrollTop = term.scrollHeight;
     
-    // حفظ الزوج المختار
+    // حفظ الزوج المختار في السحابة
     await fetch(GAS_URL, {
       method: "POST",
       body: JSON.stringify({ action: "update_control", settings: { pair: pair } })
@@ -236,7 +235,6 @@
       const json = await res.json();
       if (json.status !== "success") return;
 
-      // تحديث عناصر التحكم في أول مرة فقط لتفادي اختفاء الكتابة
       if (activeTab !== "telegram" && json.control) {
         document.getElementById("ctrlPair").value = json.control.pair || "EURUSD-OTC";
         document.getElementById("tgAgreement").value = json.control.tg_agreement || "4/4";
@@ -269,7 +267,7 @@
         }).join("");
       }
 
-      // تحديث سجل العمليات المباشر (Full-Width)
+      // تحديث سجل العمليات المباشر في الأسفل
       if (json.logs && json.logs.length > 0) {
         const term = document.getElementById("termLogs");
         term.innerHTML = json.logs.map(l => `[${l[0]}] ${l[3]}`).join("<br>");
@@ -308,7 +306,7 @@
   }
 
   refreshDashboard();
-  setInterval(refreshDashboard, 8000); // تحديث كل 8 ثوانٍ
+  setInterval(refreshDashboard, 8000);
 </script>
 
 </body>
