@@ -2,8 +2,8 @@ name: IQ AI Master Engine Runner
 
 on:
   schedule:
-    - cron: '*/10 * * * *'  # يعمل آلياً كل 10 دقائق
-  workflow_dispatch:        # يتيح زر التشغيل الفوري واليدوي
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
 
 jobs:
   run_quad_ai_inference:
@@ -20,11 +20,16 @@ jobs:
           python-version: '3.10'
           cache: 'pip'
 
-      - name: تثبيت حزم الذكاء الاصطناعي (PyTorch & Scikit-learn)
+      - name: تثبيت حزم الذكاء الاصطناعي (PyTorch & Scikit-learn & Scipy)
         run: |
           python -m pip install --upgrade pip
           pip install torch --index-url https://download.pytorch.org/whl/cpu
-          pip install numpy pandas scikit-learn joblib requests lightgbm
+          pip install numpy pandas scikit-learn scipy joblib requests lightgbm
+
+      - name: فحص ملفات المستودع قبل التشغيل
+        run: |
+          echo "📂 الملفات الموجودة في المستودع:"
+          ls -la
 
       - name: تنفيذ دورة الذكاء الاصطناعي وإرسال المصفوفة
         env:
