@@ -25,43 +25,41 @@
     }
     .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
     
-    .cockpit-grid { display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
-    @media (max-width: 1024px) { .cockpit-grid { grid-template-columns: 1fr; } }
-
     .panel-box {
       background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
-      padding: 20px; display: flex; flex-direction: column; gap: 16px;
+      padding: 20px; display: flex; flex-direction: column; gap: 16px; width: 100%;
     }
-    .section-title { font-size: 0.95rem; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-    .control-group { display: flex; flex-direction: column; gap: 6px; }
-    .control-group label { font-size: 0.85rem; color: var(--text-muted); }
-    select, input, button {
-      background: var(--card); border: 1px solid var(--border); color: var(--text);
-      padding: 10px; border-radius: 8px; font-family: inherit; font-size: 0.9rem;
-    }
+    .section-title { font-size: 1rem; font-weight: 700; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
     
+    .top-controls {
+      display: flex; gap: 15px; align-items: center; background: var(--card); padding: 15px; border-radius: 10px; border: 1px solid var(--border);
+    }
+    select, input, button {
+      background: var(--panel); border: 1px solid var(--border); color: var(--text);
+      padding: 10px 14px; border-radius: 8px; font-family: inherit; font-size: 0.95rem;
+    }
     .btn-start {
       background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff; font-weight: 900; cursor: pointer; border: none; font-size: 1rem;
+      color: #fff; font-weight: 900; cursor: pointer; border: none; font-size: 1rem; padding: 10px 24px;
       box-shadow: 0 4px 15px rgba(16,185,129,0.3); transition: all 0.2s;
     }
     .btn-start:hover { transform: translateY(-2px); opacity: 0.95; }
-    .btn-apply { background: #2563eb; color: #fff; font-weight: 700; cursor: pointer; border: none; }
-    .btn-ping { background: #8b5cf6; color: #fff; font-weight: 700; cursor: pointer; border: none; }
+    .btn-apply { background: #2563eb; color: #fff; font-weight: 700; cursor: pointer; border: none; padding: 10px 20px; }
     
     table { width: 100%; border-collapse: collapse; }
-    th, td { padding: 10px; text-align: right; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
-    th { color: var(--text-muted); background: rgba(0,0,0,0.2); }
+    th, td { padding: 12px; text-align: right; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    th { color: var(--text-muted); background: rgba(0,0,0,0.25); }
     
     .badge { padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; }
     .badge-call { background: rgba(0,230,118,0.2); color: var(--call); border: 1px solid var(--call); }
     .badge-put { background: rgba(255,82,82,0.2); color: var(--put); border: 1px solid var(--put); }
     
-    /* سجل العمليات المباشر (Terminal) */
-    .terminal-box {
-      background: #04060a; border: 1px solid var(--border); border-radius: 8px;
-      padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
-      color: #38bdf8; max-height: 250px; overflow-y: auto; line-height: 1.6;
+    /* سجل العمليات المباشر بعرض الصفحة كاملة */
+    .terminal-box-full {
+      background: #030508; border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+      color: #38bdf8; max-height: 300px; overflow-y: auto; line-height: 1.8;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8); width: 100%;
     }
     
     .candles-matrix-box { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 10px 0; }
@@ -76,92 +74,91 @@
 <div class="container">
   <header>
     <div>
-      <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v6.5</span></h2>
-      <small style="color: var(--text-muted);">🟢 متصل بالسحابة وبأوزان النماذج العصبية</small>
+      <h2>IQ AI Cockpit <span style="font-size: 0.8rem; color: var(--accent);">Enterprise Cloud v6.8</span></h2>
+      <small style="color: var(--text-muted);">🟢 متصل بـ IQ Option وبنماذج models/ العصبية</small>
     </div>
-    <button onclick="refreshDashboard()" style="cursor: pointer;">🔄 تحديث الشاشة</button>
+    <button onclick="refreshDashboard()" style="cursor: pointer;">🔄 تحديث فوري</button>
   </header>
 
   <div class="tabs-nav">
-    <button class="tab-btn active" onclick="switchTab('main')">📊 مصفوفة التوقعات وسجل العمليات</button>
-    <button class="tab-btn" onclick="switchTab('telegram')">✈️ إعدادات تنبيهات Telegram</button>
+    <button class="tab-btn active" onclick="switchTab('main')">📊 مصفوفة التوقعات الحية</button>
+    <button class="tab-btn" onclick="switchTab('telegram')">✈️ إعدادات تنبيهات Telegram (12 شمعة)</button>
   </div>
 
-  <!-- التبويب 1: مصفوفة التوقعات وسجل العمليات الحي -->
-  <div id="tab-main" class="cockpit-grid">
-    <div class="panel-box">
-      <div class="section-title">💱 اختيار زوج التداول والبدء</div>
-      
-      <div class="control-group">
-        <label>اختر زوج التداول:</label>
-        <select id="ctrlPair">
-          <optgroup label="أزواج الـ OTC (تعمل 24/7 طوال العطلة)">
-            <option value="EURUSD-OTC" selected>🟢 EURUSD-OTC</option>
-            <option value="GBPUSD-OTC">🟢 GBPUSD-OTC</option>
-            <option value="USDJPY-OTC">🟢 USDJPY-OTC</option>
-            <option value="AUDUSD-OTC">🟢 AUDUSD-OTC</option>
-            <option value="USDCAD-OTC">🟢 USDCAD-OTC</option>
-            <option value="USDCHF-OTC">🟢 USDCHF-OTC</option>
-            <option value="NZDUSD-OTC">🟢 NZDUSD-OTC</option>
-            <option value="EURGBP-OTC">🟢 EURGBP-OTC</option>
-            <option value="EURJPY-OTC">🟢 EURJPY-OTC</option>
-            <option value="GBPJPY-OTC">🟢 GBPJPY-OTC</option>
-          </optgroup>
-          <optgroup label="أزواج الفوركس العادية">
-            <option value="EURUSD">EURUSD</option>
-            <option value="GBPUSD">GBPUSD</option>
-            <option value="USDJPY">USDJPY</option>
-            <option value="AUDUSD">AUDUSD</option>
-            <option value="USDCAD">USDCAD</option>
-            <option value="USDCHF">USDCHF</option>
-            <option value="NZDUSD">NZDUSD</option>
-            <option value="EURGBP">EURGBP</option>
-            <option value="EURJPY">EURJPY</option>
-            <option value="GBPJPY">GBPJPY</option>
-          </optgroup>
-        </select>
-      </div>
-
-      <!-- زر ابدأ التحليل الفوري -->
+  <!-- التبويب 1: مصفوفة التوقعات والتحكم -->
+  <div id="tab-main" style="display: flex; flex-direction: column; gap: 20px;">
+    
+    <!-- شريط التحكم العلوي السريع -->
+    <div class="top-controls">
+      <label style="font-weight: bold; color: var(--accent);">زوج التداول المستهدف:</label>
+      <select id="ctrlPair" style="flex: 1;">
+        <optgroup label="أزواج الـ OTC (تعمل 24/7 طوال العطلة)">
+          <option value="EURUSD-OTC" selected>🟢 EURUSD-OTC</option>
+          <option value="GBPUSD-OTC">🟢 GBPUSD-OTC</option>
+          <option value="USDJPY-OTC">🟢 USDJPY-OTC</option>
+          <option value="AUDUSD-OTC">🟢 AUDUSD-OTC</option>
+          <option value="USDCAD-OTC">🟢 USDCAD-OTC</option>
+          <option value="USDCHF-OTC">🟢 USDCHF-OTC</option>
+          <option value="NZDUSD-OTC">🟢 NZDUSD-OTC</option>
+          <option value="EURGBP-OTC">🟢 EURGBP-OTC</option>
+          <option value="EURJPY-OTC">🟢 EURJPY-OTC</option>
+          <option value="GBPJPY-OTC">🟢 GBPJPY-OTC</option>
+        </optgroup>
+        <optgroup label="أزواج الفوركس العادية">
+          <option value="EURUSD">EURUSD</option>
+          <option value="GBPUSD">GBPUSD</option>
+          <option value="USDJPY">USDJPY</option>
+          <option value="AUDUSD">AUDUSD</option>
+          <option value="USDCAD">USDCAD</option>
+          <option value="USDCHF">USDCHF</option>
+          <option value="NZDUSD">NZDUSD</option>
+          <option value="EURGBP">EURGBP</option>
+          <option value="EURJPY">EURJPY</option>
+          <option value="GBPJPY">GBPJPY</option>
+        </optgroup>
+      </select>
       <button class="btn-start" onclick="startAnalysis()">🚀 ابدأ التحليل الفوري</button>
-
-      <div class="section-title" style="margin-top: 15px;">📜 سجل العمليات المباشر (Terminal)</div>
-      <div class="terminal-box" id="termLogs">
-        [SYS] قمرة القيادة متصلة بالسحابة...<br>
-        [WAIT] اضغط "ابدأ التحليل الفوري" لبدء سحب الشموع وتوليد الإشارات.
-      </div>
     </div>
 
     <!-- مصفوفة التوقعات الـ 12 باللغة العربية -->
     <div class="panel-box">
-      <div class="section-title">📊 مصفوفة الآفاق المتعددة (12 تنبؤاً بالذكاء الاصطناعي)</div>
+      <div class="section-title">📊 مصفوفة الآفاق المتعددة (12 تنبؤاً بالذكاء الاصطناعي من models/)</div>
       <table>
         <thead>
-          <tr><th>الفريم</th><th>الشمعة</th><th>القرار التوافقي</th><th>نسبة الثقة</th><th>ML</th><th>LSTM</th><th>TCN</th><th>TRF</th></tr>
+          <tr><th>الفريم</th><th>الشمعة</th><th>القرار التوافقي</th><th>نسبة الثقة</th><th>ML</th><th>LSTM</th><th>TCN</th><th>TRF</th><th>مؤشر الشذوذ DI</th></tr>
         </thead>
         <tbody id="matrixTbody">
-          <tr><td colspan="8" style="text-align: center;">جاري المزامنة مع خادم الذكاء الاصطناعي...</td></tr>
+          <tr><td colspan="9" style="text-align: center; color: var(--text-muted);">جاري الاتصال بالنماذج وسحب الشموع الحية...</td></tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- سجل العمليات والأحداث المباشر في الأسفل وبعرض الصفحة بالكامل -->
+    <div class="panel-box">
+      <div class="section-title">📜 سجل العمليات والأحداث المباشر (Terminal Log)</div>
+      <div class="terminal-box-full" id="termLogs">
+        [SYS] قمرة القيادة متصلة بخادم الذكاء الاصطناعي...<br>
+        [WAIT] اضغط "ابدأ التحليل الفوري" لسحب 300 شمعة حية وتشغيل النماذج فوراً.
+      </div>
     </div>
   </div>
 
   <!-- التبويب 2: إعدادات Telegram للـ 12 شمعة -->
   <div id="tab-telegram" class="panel-box" style="display: none;">
     <div class="section-title">✈️ شروط إرسال تنبيهات Telegram للـ 12 شمعة</div>
-    <small style="color: var(--call);">✅ يتم استخدام Bot Token و Chat ID المحفوظين بأمان في GitHub Secrets تلقائياً.</small>
+    <small style="color: var(--call);">✅ يتم استخدام Bot Token و Chat ID المحفوظين في GitHub Secrets تلقائياً دون الحاجة لكتابتهم هنا.</small>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-      <div class="control-group">
+      <div>
         <label>نسبة التوافق المطلوبة بين النماذج:</label>
-        <select id="tgAgreement">
+        <select id="tgAgreement" style="width: 100%; margin-top: 5px;">
           <option value="4/4">إجماع كامل (4/4 نماذج متوافقة)</option>
           <option value="3/4">إجماع أغلبي (3/4 نماذج متوافقة)</option>
         </select>
       </div>
-      <div class="control-group">
+      <div>
         <label>الحد الأدنى لنسبة الثقة للإرسال (%):</label>
-        <input type="number" id="tgMinConf" min="50" max="95" value="65">
+        <input type="number" id="tgMinConf" min="50" max="95" value="65" style="width: 100%; margin-top: 5px;">
       </div>
     </div>
 
@@ -193,40 +190,42 @@
       </div>
     </div>
 
-    <div style="display: flex; gap: 15px; margin-top: 10px;">
-      <button class="btn-apply" onclick="saveAllSettings()" style="flex: 1;">💾 حفظ إعدادات Telegram</button>
-      <button class="btn-ping" onclick="pingTelegram()" style="flex: 1;">🔔 تجربة إرسال إشعار تليجرام الآن</button>
-    </div>
+    <button class="btn-apply" onclick="saveTelegramSettings()" style="width: 250px; margin-top: 15px;">💾 حفظ إعدادات Telegram</button>
   </div>
 </div>
 
 <script>
   const GAS_URL = "https://script.google.com/macros/s/AKfycbwkXgfWISV5sdlq2K6Ij35useWQnuJSwTZwmo8H0rmIn1Ki0r2PLY6IqverToG2k57HbQ/exec";
-  let isEditingSettings = false;
+  let activeTab = "main";
 
   function switchTab(t) {
+    activeTab = t;
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     event.target.classList.add('active');
-    document.getElementById('tab-main').style.display = (t === 'main') ? 'grid' : 'none';
+    document.getElementById('tab-main').style.display = (t === 'main') ? 'flex' : 'none';
     document.getElementById('tab-telegram').style.display = (t === 'telegram') ? 'flex' : 'none';
-    isEditingSettings = (t === 'telegram');
   }
 
   async function startAnalysis() {
     const pair = document.getElementById("ctrlPair").value;
     const term = document.getElementById("termLogs");
-    term.innerHTML += `<br>[USER] تم طلب تحليل الزوج ${pair}... جاري إرسال الأمر للسحابة.`;
+    term.innerHTML += `<br>[USER] تم طلب تحليل الزوج <b>${pair}</b>... جاري إرسال الأمر للسحابة.`;
+    term.scrollTop = term.scrollHeight;
     
-    // حفظ الزوج المختار أولاً
-    await saveAllSettings(false);
+    // حفظ الزوج المختار
+    await fetch(GAS_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "update_control", settings: { pair: pair } })
+    });
     
     try {
       const res = await fetch(GAS_URL + "?action=trigger_now", { method: "GET", redirect: "follow" });
       const j = await res.json();
       term.innerHTML += `<br>[SYS] ${j.message}`;
+      term.scrollTop = term.scrollHeight;
       alert(j.message);
     } catch (e) {
-      alert("تم إرسال الأمر بنجاح!");
+      alert("تم إرسال أمر التحليل بنجاح!");
     }
   }
 
@@ -237,8 +236,8 @@
       const json = await res.json();
       if (json.status !== "success") return;
 
-      // تحديث عناصر التحكم فقط إذا لم يكن المستخدم يعدل في صفحة الإعدادات
-      if (!isEditingSettings && json.control) {
+      // تحديث عناصر التحكم في أول مرة فقط لتفادي اختفاء الكتابة
+      if (activeTab !== "telegram" && json.control) {
         document.getElementById("ctrlPair").value = json.control.pair || "EURUSD-OTC";
         document.getElementById("tgAgreement").value = json.control.tg_agreement || "4/4";
         document.getElementById("tgMinConf").value = json.control.tg_min_conf || 65;
@@ -264,21 +263,22 @@
             <tr>
               <td><b>${r.Horizon}</b></td><td>${r.Candle}</td>
               <td><span class="badge ${bClass}">${r.Action}</span></td>
-              <td><b>${r.Confidence}</b></td><td>${r.ML_Vote}</td><td>${r.LSTM_Vote}</td><td>${r.TCN_Vote}</td><td>${r.TRF_Vote}</td>
+              <td><b>${r.Confidence}</b></td><td>${r.ML_Vote}</td><td>${r.LSTM_Vote}</td><td>${r.TCN_Vote}</td><td>${r.TRF_Vote}</td><td>${r.DI_Status}</td>
             </tr>
           `;
         }).join("");
       }
 
-      // تحديث سجل العمليات المباشر
+      // تحديث سجل العمليات المباشر (Full-Width)
       if (json.logs && json.logs.length > 0) {
         const term = document.getElementById("termLogs");
-        term.innerHTML = json.logs.map(l => `[${l[0]}] [${l[1]}] ${l[3]}`).join("<br>");
+        term.innerHTML = json.logs.map(l => `[${l[0]}] ${l[3]}`).join("<br>");
+        term.scrollTop = term.scrollHeight;
       }
     } catch (e) { console.error(e); }
   }
 
-  async function saveAllSettings(showAlert = true) {
+  async function saveTelegramSettings() {
     const payload = {
       action: "update_control",
       settings: {
@@ -301,24 +301,14 @@
     };
     try {
       await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
-      if (showAlert) alert("✅ تم حفظ إعدادات Telegram بنجاح!");
+      alert("✅ تم حفظ إعدادات Telegram بنجاح في السحابة!");
     } catch (err) {
-      if (showAlert) alert("فشل الحفظ: " + err);
+      alert("فشل الحفظ: " + err);
     }
   }
 
-  async function pingTelegram() {
-    // تفعيل علامة test_telegram في الإعدادات
-    const payload = {
-      action: "update_control",
-      settings: { test_telegram: true }
-    };
-    await fetch(GAS_URL, { method: "POST", body: JSON.stringify(payload) });
-    alert("🔔 تم إرسال أمر فحص الإشعار للمحرك السحابي! سيصلك الإشعار على هاتفك فور اكتمال الدورة.");
-  }
-
   refreshDashboard();
-  setInterval(refreshDashboard, 10000);
+  setInterval(refreshDashboard, 8000); // تحديث كل 8 ثوانٍ
 </script>
 
 </body>
